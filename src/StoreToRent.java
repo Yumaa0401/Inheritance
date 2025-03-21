@@ -3,7 +3,40 @@ import java.util.Scanner;
 public class StoreToRent {
     
     private static final double MAINTENANCE_COST = 1000;
-    
+    private final double INTEREST_RATE = 0.25;
+    private boolean loanRequired;
+    private double loanAmount;
+    private int loanPaymentTerm;
+
+    public double getINTEREST_RATE(){
+        return INTEREST_RATE;
+    }
+
+    public boolean loanRequired(){
+        return loanRequired;
+    }
+
+    public double loanAmount(){
+        return loanAmount;
+    }
+
+    public int loanPaymentTerm(){
+        return loanPaymentTerm;
+    }
+
+    public StoreToRent(boolean loanRequired, double loanAmount, int loanPaymentTerm){
+        this.loanRequired = loanRequired;
+        this.loanAmount = loanAmount;
+        this.loanPaymentTerm = loanPaymentTerm;
+    }
+
+    public double caculateLoanFinancing(){
+        if(loanRequired){
+            return(loanAmount * (1 + INTEREST_RATE)) / loanPaymentTerm;
+        }else{
+            return 0;
+        }
+    }
     
     private String storeName;
     private String storeBusiness;
@@ -118,3 +151,38 @@ public class StoreToRent {
         "Available: " + available + "\n";
     }
 }
+
+class StoreOneA extends StoreToRent{
+    private boolean specialCustomer;
+    private double monthlyPayment;
+
+    public StoreOneA(boolean loanRequired,double loanAmount, int loanPaymentTerm, boolean specialCustomer){
+        super(loanRequired, loanAmount, loanPaymentTerm);
+        this.specialCustomer = specialCustomer;
+    }
+
+    public void showStoreInfo(){
+        System.out.println(toString());
+    }
+
+    @Override
+    public String toString(){
+        return super.toString()+
+        "LOAN DETAILS (if applicable):\n" +
+        "Loan Amount: " + loanAmount() + "\n" +
+        "Loan Payment Term: " + loanPaymentTerm() + "\n" +
+        "Interest Rate: " + getINTEREST_RATE() + "\n" +
+        "Special Customer: " + specialCustomer + "\n" +
+        "Monthly Loan Payment: " + monthlyPayment + "\n";
+    }
+
+    public double caculateLoanFinancing(){
+        monthlyPayment = super.caculateLoanFinancing();
+        if(specialCustomer){
+            double DISCOUNT_RATE = 0.1;
+            monthlyPayment -= (monthlyPayment *DISCOUNT_RATE);
+        }
+        return monthlyPayment;
+    }
+}
+
